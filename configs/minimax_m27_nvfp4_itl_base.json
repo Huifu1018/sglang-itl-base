@@ -1,0 +1,23 @@
+{
+  "engine": "sglang",
+  "sglang_version": "0.5.9",
+  "algorithm": "ITL_BASE",
+  "method": "auto",
+  "target_model": "nvidia/MiniMax-M2.7-NVFP4",
+  "draft_model": "Qwen/Qwen2.5-1.5B-Instruct",
+  "server_args": {
+    "host": "0.0.0.0",
+    "port": 8000,
+    "trust_remote_code": true,
+    "disable_overlap_schedule": true,
+    "speculative_num_steps": 4,
+    "speculative_num_draft_tokens": 5
+  },
+  "environment": {
+    "ITL_BASE_METHOD": "auto",
+    "ITL_BASE_DRAFT_DTYPE": "auto",
+    "ITL_BASE_ASSISTANT_LOOKBEHIND": "10",
+    "ITL_BASE_TARGET_LOOKBEHIND": "10",
+    "ITL_BASE_ENABLE_DRAFT_CACHE": "true"
+  }
+}

@@ -1,0 +1,56 @@
+[build-system]
+requires = ["setuptools>=77", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "sglang-itl-base"
+version = "0.1.0"
+description = "SGLang 0.5.9 integration of first-paper heterogeneous-vocabulary speculative decoding baselines"
+readme = "README.md"
+requires-python = ">=3.10"
+license = "Apache-2.0"
+license-files = ["LICENSE"]
+authors = [
+  {name = "Huifu1018"}
+]
+dependencies = []
+
+[project.urls]
+Homepage = "https://github.com/Huifu1018/sglang-itl-base"
+Repository = "https://github.com/Huifu1018/sglang-itl-base"
+Issues = "https://github.com/Huifu1018/sglang-itl-base/issues"
+
+[project.optional-dependencies]
+sglang = [
+  "sglang==0.5.9",
+  "torch",
+  "transformers>=4.50",
+  "accelerate",
+  "sentencepiece>=0.2",
+  "safetensors>=0.4"
+]
+hf = [
+  "torch",
+  "transformers>=4.50",
+  "accelerate",
+  "sentencepiece>=0.2",
+  "safetensors>=0.4"
+]
+dev = [
+  "pytest>=8",
+  "ruff>=0.9"
+]
+
+[project.entry-points."sglang.srt.plugins"]
+itl_base = "sglang_itl_base.sglang.plugin:activate"
+
+[project.scripts]
+sglang-itl-base-launch = "sglang_itl_base.cli.launch:main"
+sglang-itl-base-preflight = "sglang_itl_base.cli.preflight:main"
+
+[tool.setuptools.packages.find]
+include = ["sglang_itl_base*"]
+
+[tool.ruff]
+line-length = 100
+target-version = "py310"
