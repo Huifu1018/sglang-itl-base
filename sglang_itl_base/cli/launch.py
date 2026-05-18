@@ -10,6 +10,7 @@ from sglang_itl_base import ITL_BASE_ALGORITHM
 from sglang_itl_base.sglang.compat import (
     LEGACY_PATCH_ENV,
     has_native_custom_spec_registry,
+    install_child_process_patch_hook,
     patch_legacy_ngram_worker,
 )
 from sglang_itl_base.sglang.plugin import activate
@@ -54,6 +55,7 @@ def main(argv: list[str] | None = None) -> None:
 
     if _uses_itl_base(argv) and not has_native_custom_spec_registry():
         os.environ[LEGACY_PATCH_ENV] = "1"
+        install_child_process_patch_hook()
         patch_legacy_ngram_worker()
         argv = _rewrite_algorithm(argv)
     else:

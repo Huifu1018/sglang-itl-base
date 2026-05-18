@@ -3,10 +3,41 @@
 from __future__ import annotations
 
 import os
+from collections.abc import MutableMapping
+from pathlib import Path
 from typing import Callable
 
 
 LEGACY_PATCH_ENV = "ITL_BASE_LEGACY_NGRAM_PATCH"
+CHILD_BOOTSTRAP_ENV = "ITL_BASE_CHILD_BOOTSTRAP"
+
+
+def child_bootstrap_dir() -> Path:
+    return Path(__file__).resolve().parent.parent / "_bootstrap"
+
+
+def install_child_process_patch_hook(
+    environ: MutableMapping[str, str] | None = None,
+) -> Path:
+    """Make spawned SGLang scheduler processes re-apply the legacy patch."""
+
+    environ = os.environ if environ is None else environ
+    bootstrap_dir = child_bootstrap_dir()
+    sitecustomize = bootstrap_dir / "sitecustomize.py"
+    if not sitecustomize.exists():
+        raise RuntimeError(f"Missing ITL_BASE child bootstrap: {sitecustomize}")
+
+    entries = [
+        entry
+        for entry in environ.get("PYTHONPATH", "").split(os.pathsep)
+        if entry
+    ]
+    bootstrap_entry = str(bootstrap_dir)
+    entries = [entry for entry in entries if entry != bootstrap_entry]
+    entries.insert(0, bootstrap_entry)
+    environ["PYTHONPATH"] = os.pathsep.join(entries)
+    environ[CHILD_BOOTSTRAP_ENV] = "1"
+    return bootstrap_dir
 
 
 def has_native_custom_spec_registry() -> bool:

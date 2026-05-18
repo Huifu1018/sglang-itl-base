@@ -66,7 +66,9 @@ The wrapper does three things:
 
 1. Rewrites `--speculative-algorithm ITL_BASE` to SGLang's built-in `NGRAM`
    before 0.5.9 argument parsing.
-2. Patches the 0.5.9 NGRAM worker factory in-process.
+2. Patches the 0.5.9 NGRAM worker factory in the parent process and installs
+   a child-process bootstrap hook so scheduler subprocesses re-apply the patch
+   after re-importing SGLang.
 3. Validates the required ITL_BASE serving constraints.
 
 Do not start 0.5.9 with plain `python -m sglang.launch_server
@@ -90,6 +92,11 @@ sglang-itl-base-launch \
   --speculative-num-steps 4 \
   --speculative-num-draft-tokens 5
 ```
+
+In SGLang 0.5.9 logs, seeing `NGRAM` in parsed arguments is expected because
+the wrapper uses that built-in parser path. To confirm the custom worker is
+actually active, look for `Initialized ITL_BASE worker` at startup and
+`ITL_BASE metrics` during decoding.
 
 Sampling, force TLI:
 
